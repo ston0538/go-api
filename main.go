@@ -2,22 +2,18 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 )
 
-type FooHanlder struct {
+func homePage(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Homepage Endpoint Hit")
 }
 
-func (f FooHanlder) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Hello foo")
+func handleRequests() {
+	http.HandleFunc("/", homePage)
+	log.Fatal(http.ListenAndServe(":8081", nil))
 }
 func main() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprint(w, "Hello world!!")
-	})
-	http.HandleFunc("/bar", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprint(w, "hello bar")
-	})
-	http.Handle("/foo", FooHanlder{})
-	http.ListenAndServe(":3000", nil)
+	handleRequests()
 }
